@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      @import "{{site.baseurl}}/bower_components/materialize/dist/css/materialize.min.css";
+      @import "{{site.baseurl}}/css/gfm.css";
+    </style>
+    <script src="{{site.baseurl}}/bower_components/jquery/dist/jquery.min.js">
+      </script>
+    <script src="{{site.baseurl}}/bower_components/materialize/dist/js/materialize.min.js">
+      </script>
+    <script src="{{site.baseurl}}/bower_components/d3/d3.min.js">
+      </script>
+  </head>
+  <body>
+    <div class="container markdown-body">
+      {{content | markdownify}}
+    </div>
+    <script>
+      ;(function(){
+        
+         // Make a Table of Contents
+         $('#table-of-contents').after('<div></div>')
+            .next().addClass('toc')
+         d3.select('.toc')
+           .append('ul')
+           .selectAll('li')
+           .data( function(){
+              return d3.selectAll('.markdown-body h1')[0]
+                .map( function(n){ 
+                  return {
+                    txt: n.innerText,
+                    id: d3.select(n).attr('id'),
+                  }
+                })
+          })
+          .enter()
+          .append('li')
+          .append('a')
+          .text( function(d){console.log(d);return d.txt;})
+          .attr( 'href', function(d){console.log(d);return '#'+d.id;})
+        
+         
+         
+         var p = $('.markdown-body');
+          
+           p.children().toArray().forEach( function(n){
+             if ( $(n).prop('tagName') == 'H1'){
+                el = $( '<div></div>' )
+                .addClass('heading-1')
+                .addClass('section')
+                .appendTo(p);
+               
+                el = $('<div></div>')
+                    .addClass('slide')
+                    .appendTo(el)
+               
+             } else if ( $(n).prop('tagName') == 'H2'){
+               el = $('<div></div>')
+                    .addClass('slide')
+                    .addClass('heading-2')
+                    .appendTo( $(el).parent() )
+             }
+             $(el).append(n)
+           })
+      })();
+    </script>
+  </body>
+</html>
